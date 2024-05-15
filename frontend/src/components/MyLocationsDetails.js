@@ -1,21 +1,17 @@
-import {
-  MapContainer, Marker, Popup, TileLayer, Polygon
-} from 'react-leaflet';
-import Leaflet from 'leaflet';
-import { useEffect, useState } from 'react';
-import {
-  FaFileCsv, FaTrash, FaEdit,
-} from 'react-icons/fa';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import serverURL from '../utils/urls';
-import getCsvData from '../utils/csv';
-import useAuth from '../hooks/useAuth';
-import DownloadMap from '../utils/downloadmap';
+import { MapContainer, Marker, Popup, TileLayer, Polygon } from "react-leaflet";
+import Leaflet from "leaflet";
+import { useEffect, useState } from "react";
+import { FaFileCsv, FaTrash, FaEdit } from "react-icons/fa";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import serverURL from "../utils/urls";
+import getCsvData from "../utils/csv";
+import useAuth from "../hooks/useAuth";
+import DownloadMap from "../utils/downloadmap";
 
-export default function MyLocationsMap() {
+export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
   // get the authenticated user from a custom hook effect
   const { authUser } = useAuth();
 
@@ -30,6 +26,8 @@ export default function MyLocationsMap() {
 
     initializeLocations();
   }, [authUser]);
+
+  useEffect(() => {}, [locations]);
 
   return (
     <div className="text-black dark:text-white p-3 lg:p-10">
@@ -77,6 +75,9 @@ export default function MyLocationsMap() {
                         </button>
                         <button
                           type="button"
+                          onClick={() => {
+                            handleSelectLocationForUpdate(location);
+                          }}
                           className="primary-button p-2 rounded-md flex items-center space-x-2 border border-green-500 cursor-pointer"
                         >
                           <FaEdit />
