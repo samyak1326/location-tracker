@@ -22,10 +22,9 @@ export default function Profile() {
   return (
     <div className="pt-5 bg-white dark:bg-black dark:text-white">
       <div className=" p-10">
-
         <div>
           <div className="flex justify-center my-3">
-            <img className="w-12 h-12 rounded-full" src={authUser.profileBanner} alt="profile" />
+            <img className="w-14 h-14 rounded-full" src={authUser.profileBanner} alt="profile" />
           </div>
           <div className="flex justify-center">
             <div className="mx-3 flex flex-col w-full  sm:w-[300px]  space-y-4">
@@ -55,14 +54,14 @@ export default function Profile() {
           <Link to="/my-friends" className="primary-button w-full flex justify-between items-center sm:w-[150px] shadow-md rounded-md border border-green-500  p-5 text-sm">
             <span>Friends: </span>
             <span className="text-green-500">
-              {/* number of friends here */}
+              {/* Number of friends here */}
             </span>
             <BsArrowUpRight className="text-green-500" />
           </Link>
           <Link to="/my-locations" className="primary-button w-full flex justify-between items-center sm:w-[150px] border rounded-md border-green-500 p-5 text-sm">
             Locations:
             <span className="text-green-500">
-              {/* number of locations here */}
+              {authUser?.locations?.length}
             </span>
             <BsArrowUpRight className="text-green-500" />
           </Link>

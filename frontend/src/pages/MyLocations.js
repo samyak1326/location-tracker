@@ -10,7 +10,7 @@ export default function MyLocations() {
   return (
     <div className="">
       <div className="text-black dark:text-white lg:p-10">
-        My Locations Page
+        <MyLocationsDetails />
       </div>
     </div>
   );
