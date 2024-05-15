@@ -3,9 +3,9 @@ import { FaCircleInfo, FaLocationDot } from "react-icons/fa6";
 import { useState} from "react";
 import serverURL from "../utils/urls";
 
-export default function Autocomplete() {
+export default function Autocomplete({ onAddLocation }) {
   // state variables
-  const [locations, setLocations] = useState([]); // array to store autocomplete suggestions
+  const [locations, setLocations] = useState([]); // Array to store autocomplete suggestions
   const [locationInput, setLocationInput] = useState(""); // user input for location search
   const [inputTimer, setInputTimer] = useState(null); // timer for input debounce
   const [autoCompleteerror, setAutoCompleteError] = useState(""); // error message for autocomplete
@@ -16,14 +16,20 @@ export default function Autocomplete() {
         setLocations([]);
         return;
       }
-
       const {
         data: { data },
       } = await axios.get(`${serverURL}/autocomplete/${searchKey}`);
       setLocations(data);
     } catch (error) {
+      console.log(error);
       setAutoCompleteError("Error fetching data");
     }
+  };
+
+  const handleAddLocation = async (name, latitude, longitude) => {
+    onAddLocation(name, latitude, longitude);
+    setLocationInput(name);
+    setLocations([]);
   };
 
   const handleInputChange = (e) => {
@@ -83,6 +89,13 @@ export default function Autocomplete() {
                     </div>
                     <div className="w-fit">
                       <button
+                        onClick={() => {
+                          handleAddLocation(
+                            location.formattedAddress,
+                            location.latitude,
+                            location.longitude,
+                          );
+                        }}
                         type="button"
                         className="primary-button  border-black dark:border-white"
                       >

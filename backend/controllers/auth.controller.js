@@ -7,46 +7,48 @@ const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const expiresIn = '1h'; // Token expiration time
 
 exports.signup = async (req, res) => {
-  try {
-    const {
-      username, password, gender
-    } = req.body;
-
-    // check if username already exists
-    const existingUser = await User.findOne({ username });
-
-    if (existingUser) {
-      return res.status(400).json({
-        message: 'Username already exists',
+  exports.signup = async (req, res) => {
+    try {
+      const { username, password, gender, currentLocation } = req.body;
+  
+      // check if username already exists
+      const existingUser = await User.findOne({ username });
+  
+      if (existingUser) {
+        return res.status(400).json({
+          message: "Username already exists",
+        });
+      }
+  
+      // hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // get avatar
+      const avatar =
+        "https://img.icons8.com/?size=160&id=492ILERveW8G&format=png";
+  
+      // create a new user
+      const newUser = new User({
+        username,
+        password: hashedPassword,
+        currentLocation,
+        gender,
+        profileBanner: avatar,
+      });
+  
+      // save the user to the database
+      await newUser.save();
+      res.status(200).json({
+        message: "User created successfully",
+        data: null,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Internal Server Error",
+        data: null,
       });
     }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // get avatar
-    const avatar = "https://img.icons8.com/?size=160&id=492ILERveW8G&format=png"
-
-    // create a new user
-    const newUser = new User({
-      username,
-      password: hashedPassword,
-      gender,
-      profileBanner: avatar,
-    });
-
-    // save the user to the database
-    await newUser.save();
-    res.status(200).json({
-      message: 'User created successfully',
-      data: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: 'Internal Server Error',
-      data: null,
-    });
-  }
+  };
 };
 
 exports.signin = async (req, res) => {
