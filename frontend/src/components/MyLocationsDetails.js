@@ -18,6 +18,34 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
   // create the state variables
   const [locations, setLocations] = useState([]);
 
+  // function to handle the deletion of a user's location
+  const handleDeleteLocation = async (locationToDelete) => {
+    // get a cookie value
+    const authToken = Cookies.get("authToken");
+    try {
+      await axios.delete(`${serverURL}/locations/delete`, {
+        data: {
+          id: locationToDelete?._id,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      // filter out the deleted location
+      const updatedLocations = locations.filter(
+        (location) => location._id !== locationToDelete?._id,
+      );
+      // update the locations state variable
+      setLocations(updatedLocations);
+      // display a success message
+      toast.success("Location deleted successfully!");
+    } catch (error) {
+      const responseError = error?.response?.data?.message;
+      toast.error(responseError || error.message);
+    }
+  };
+
   useEffect(() => {
     const userLocations = authUser?.locations || [];
     const initializeLocations = () => {
@@ -69,6 +97,9 @@ export default function MyLocationsDetails({ handleSelectLocationForUpdate }) {
                       <div className="flex justify-between items-center w-full left-0 absolute bottom-0">
                         <button
                           type="button"
+                          onClick={() => {
+                            handleDeleteLocation(location);
+                          }}
                           className="primary-button p-2 rounded-md flex items-center space-x-2 border border-red-500 cursor-pointer"
                         >
                           <FaTrash />{" "}
